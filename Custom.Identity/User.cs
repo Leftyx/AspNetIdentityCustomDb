@@ -35,7 +35,6 @@ namespace Custom.Identity
         public bool TwoFactorEnabled { get; set; }
 
         public IList<string> Roles { get; private set; }
-
         public IList<UserClaim> Claims { get; private set; }
     }
 }
