@@ -14,7 +14,8 @@ namespace Custom.Identity
         IUserLockoutStore<User, int>, 
         IUserTwoFactorStore<User, int>,
         IUserRoleStore<User, int>,
-        IUserClaimStore<User, int>
+        IUserClaimStore<User, int>,
+        IUserLoginStore<User, int>
     {
         private readonly string FolderStorage = string.Empty;
         private readonly Biggy.Data.Json.JsonStore<User> UserDb = null;
@@ -277,5 +278,25 @@ namespace Custom.Identity
         }
 
         #endregion
+
+        public Task AddLoginAsync(User user, UserLoginInfo login)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> FindAsync(UserLoginInfo login)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveLoginAsync(User user, UserLoginInfo login)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
