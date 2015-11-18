@@ -12,6 +12,7 @@ namespace Custom.Identity
         {
             this.Roles = new List<string>();
             this.Claims = new List<UserClaim>();
+            this.Logins = new List<UserLoginInfo>();
         }
 
         public User(string userName)
@@ -36,5 +37,6 @@ namespace Custom.Identity
 
         public IList<string> Roles { get; private set; }
         public IList<UserClaim> Claims { get; private set; }
+        public List<UserLoginInfo> Logins { get; private set; }
     }
 }

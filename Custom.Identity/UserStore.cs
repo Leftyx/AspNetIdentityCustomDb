@@ -7,6 +7,8 @@ namespace Custom.Identity
 {
     using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
+    using System.Security.Cryptography;
+    using System.Text;
 
     public class UserStore : 
         IUserStore<User, int>, 
@@ -120,7 +122,16 @@ namespace Custom.Identity
 
         public Task<DateTimeOffset> GetLockoutEndDateAsync(User user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            { 
+                throw new ArgumentNullException("user"); 
+            }
+            if (!user.LockoutEndDateUtc.HasValue)
+            { 
+                throw new InvalidOperationException("LockoutEndDate has no value."); 
+            }
+
+            return Task.FromResult(new DateTimeOffset(user.LockoutEndDateUtc.Value));
         }
 
         public Task<int> IncrementAccessFailedCountAsync(User user)
@@ -279,14 +290,33 @@ namespace Custom.Identity
 
         #endregion
 
+        #region USER - LOGINS
+
         public Task AddLoginAsync(User user, UserLoginInfo login)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if (login == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            if (!user.Logins.Any(x => x.LoginProvider == login.LoginProvider && x.ProviderKey == login.ProviderKey))
+            {
+                user.Logins.Add(new UserLoginInfo(login.LoginProvider, login.ProviderKey));
+                UserDb.Update(user);
+            }
+
+            return Task.FromResult(true);
         }
 
         public Task<User> FindAsync(UserLoginInfo login)
         {
-            throw new NotImplementedException();
+            string loginId = GetLoginId(login);
+            var user = UserDb.TryLoadData().Where(f => f.Id == int.Parse(loginId)).SingleOrDefault();
+            return Task.FromResult(user);
         }
 
         public Task<IList<UserLoginInfo>> GetLoginsAsync(User user)
@@ -297,6 +327,26 @@ namespace Custom.Identity
         public Task RemoveLoginAsync(User user, UserLoginInfo login)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        private string GetLoginId(UserLoginInfo login)
+        {
+            using (var sha = new SHA1CryptoServiceProvider())
+            {
+                byte[] clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
+                byte[] hashBytes = sha.ComputeHash(clearBytes);
+                return ToHex(hashBytes);
+            }
+        }
+
+        private string ToHex(byte[] bytes)
+        {
+            StringBuilder sb = new StringBuilder(bytes.Length * 2);
+            for (int i = 0; i < bytes.Length; i++)
+                sb.Append(bytes[i].ToString("x2"));
+            return sb.ToString();
         }
     }
 }

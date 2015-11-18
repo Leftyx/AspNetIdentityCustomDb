@@ -28,6 +28,8 @@ namespace Custom.Identity
                 RequireLowercase = false,
                 RequireUppercase = false,
             };
+
         }
+
     }
 }

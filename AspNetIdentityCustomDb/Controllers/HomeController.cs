@@ -14,18 +14,27 @@ namespace AspNetIdentityCustomDb.Controllers
     public class HomeController : Controller
     {
         private Custom.Identity.RoleManager _roleManager;
+        private Custom.Identity.UserManager _userManager;
 
         public HomeController()
         {
         }
 
-        public HomeController(Custom.Identity.RoleManager roleManager)
+        public HomeController(Custom.Identity.RoleManager roleManager, Custom.Identity.UserManager userManager)
         {
             RoleManager = roleManager;
+            UserManager = userManager;
         }
 
         public async Task<ActionResult> Index()
         {
+
+            // this.UserManager.IsLockedOut()
+
+            await this.UserManager.CreateAsync(new Custom.Identity.User() { UserName = "Alberto" });
+
+            // await this.UserManager.Store.CreateAsync(new Custom.Identity.User() { UserName = "LeftyX" });
+
             var userName = User != null ? User.Identity.GetUserName() : string.Empty;
 
             var role = await RoleManager.FindByNameAsync("Administrators");
@@ -61,6 +70,18 @@ namespace AspNetIdentityCustomDb.Controllers
             private set
             {
                 _roleManager = value;
+            }
+        }
+
+        public Custom.Identity.UserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().Get<Custom.Identity.UserManager>();
+            }
+            private set
+            {
+                _userManager = value;
             }
         }
     }

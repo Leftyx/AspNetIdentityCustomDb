@@ -153,6 +153,9 @@ namespace AspNetIdentityCustomDb.Controllers
             {
                 var user = new Custom.Identity.User() { UserName = model.Email };
 
+                user.LockoutEnabled = true;
+                user.LockoutEndDateUtc = DateTime.UtcNow.AddMinutes(-1);
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
