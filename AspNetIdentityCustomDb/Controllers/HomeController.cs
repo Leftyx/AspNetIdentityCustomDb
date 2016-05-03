@@ -31,7 +31,7 @@ namespace AspNetIdentityCustomDb.Controllers
 
             // this.UserManager.IsLockedOut()
 
-            await this.UserManager.CreateAsync(new Custom.Identity.User() { UserName = "Alberto" });
+            await this.UserManager.CreateAsync(new Custom.Identity.User { UserName = "LeftyX" });
 
             // await this.UserManager.Store.CreateAsync(new Custom.Identity.User() { UserName = "LeftyX" });
 
@@ -40,7 +40,7 @@ namespace AspNetIdentityCustomDb.Controllers
             var role = await RoleManager.FindByNameAsync("Administrators");
             if (role == null)
             {
-                await RoleManager.CreateAsync(new Custom.Identity.Role() { Id = 1, Name = "Administrators" });
+                await RoleManager.CreateAsync(new Custom.Identity.Role { Id = 1, Name = "Administrators" });
             }
 
             return View();

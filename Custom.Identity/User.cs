@@ -23,7 +23,7 @@ namespace Custom.Identity
 
         public User(int id, string userName): this()
         {
-            this.Id = Id;
+            this.Id = id;
             this.UserName = userName;
         }
 

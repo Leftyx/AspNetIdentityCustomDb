@@ -18,7 +18,7 @@ namespace Custom.Identity
 
         public Role(int id, string name)
         {
-            this.Id = Id;
+            this.Id = id;
             this.Name = name;
         }
         

@@ -11,10 +11,9 @@ namespace AspNetIdentityCustomDb
 {
     public partial class Startup
     {
-        // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            string folderStorage = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "_Storage");
+            var folderStorage = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "_Storage");
 
             // Configure the db context, user manager and signin manager to use a single instance per request
             // app.CreatePerOwinContext(ApplicationDbContext.Create);

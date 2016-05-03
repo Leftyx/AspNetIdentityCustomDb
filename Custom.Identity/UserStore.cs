@@ -34,7 +34,7 @@ namespace Custom.Identity
 
         public System.Threading.Tasks.Task CreateAsync(User user)
         {
-            int userId = 0;
+            var userId = 0;
             var users = this.UserDb.TryLoadData();
             userId = users == null ? 1 : users.Count + 1;
             user.Id = userId;
@@ -57,7 +57,7 @@ namespace Custom.Identity
                 return Task.FromResult(user);
             }
 
-            user = users.Where(f => f.Id == userId).SingleOrDefault();
+            user = users.SingleOrDefault(f => f.Id == userId);
 
             return Task.FromResult(user);
         }
@@ -71,7 +71,7 @@ namespace Custom.Identity
                 return Task.FromResult(user);
             }
 
-            user = users.Where(f => f.UserName == userName).SingleOrDefault();
+            user = users.SingleOrDefault(f => f.UserName == userName);
 
             return Task.FromResult(user);
         }
@@ -185,7 +185,7 @@ namespace Custom.Identity
             }
 
             var roles = RoleDb.TryLoadData();
-            var role = roles.Where(f => f.Name == roleName).SingleOrDefault();
+            var role = roles.SingleOrDefault(f => f.Name == roleName);
 
             if (role == null)
             {
@@ -253,7 +253,7 @@ namespace Custom.Identity
                 throw new ArgumentNullException("claim");
             }
 
-            if (user.Claims != null && user.Claims.Where(f=>f.Value == claim.Value).Count() == 0)
+            if (user.Claims != null && user.Claims.Any(f=>f.Value == claim.Value))
             {
                 user.Claims.Add(new UserClaim(claim));
             }
@@ -314,8 +314,8 @@ namespace Custom.Identity
 
         public Task<User> FindAsync(UserLoginInfo login)
         {
-            string loginId = GetLoginId(login);
-            var user = UserDb.TryLoadData().Where(f => f.Id == int.Parse(loginId)).SingleOrDefault();
+            var loginId = GetLoginId(login);
+            var user = UserDb.TryLoadData().SingleOrDefault(f => f.Id == int.Parse(loginId));
             return Task.FromResult(user);
         }
 
@@ -335,15 +335,15 @@ namespace Custom.Identity
         {
             using (var sha = new SHA1CryptoServiceProvider())
             {
-                byte[] clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
-                byte[] hashBytes = sha.ComputeHash(clearBytes);
+                var clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
+                var hashBytes = sha.ComputeHash(clearBytes);
                 return ToHex(hashBytes);
             }
         }
 
-        private string ToHex(byte[] bytes)
+        private static string ToHex(byte[] bytes)
         {
-            StringBuilder sb = new StringBuilder(bytes.Length * 2);
+            var sb = new StringBuilder(bytes.Length * 2);
             for (int i = 0; i < bytes.Length; i++)
                 sb.Append(bytes[i].ToString("x2"));
             return sb.ToString();

@@ -38,7 +38,7 @@ namespace Custom.Identity
                 return Task.FromResult(role);
             }
 
-            role = roles.Where(f => f.Id == roleId).SingleOrDefault();
+            role = roles.SingleOrDefault(f => f.Id == roleId);
 
             return Task.FromResult(role);
         }
@@ -52,7 +52,7 @@ namespace Custom.Identity
                 return Task.FromResult(role);
             }
 
-            role = roles.Where(f => f.Name == roleName).SingleOrDefault();
+            role = roles.SingleOrDefault(f => f.Name == roleName);
 
             return Task.FromResult(role);
         }

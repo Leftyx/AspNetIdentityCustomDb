@@ -10,10 +10,7 @@ namespace Custom.Identity
     {
         public RoleManager(IRoleStore<Role, int> store): base(store)
         {
-            this.RoleValidator = new RoleValidator<Role, int>(this)
-            {
-
-            };
+            this.RoleValidator = new RoleValidator<Role, int>(this);
         }
     }
 }

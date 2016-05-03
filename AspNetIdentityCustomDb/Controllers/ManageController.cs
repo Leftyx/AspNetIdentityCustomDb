@@ -64,14 +64,8 @@ namespace AspNetIdentityCustomDb.Controllers
                 : "";
 
             var userId = int.Parse(User.Identity.GetUserId());
-            var model = new IndexViewModel
-            {
-                // HasPassword = HasPassword(),
-                // PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                // TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                // Logins = await UserManager.GetLoginsAsync(userId),
-                // BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
+            var model = new IndexViewModel();
+
             return View(model);
         }
 
@@ -236,7 +230,7 @@ namespace AspNetIdentityCustomDb.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
             return View(model);
@@ -265,7 +259,7 @@ namespace AspNetIdentityCustomDb.Controllers
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     }
-                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
+                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
                 }
                 AddErrors(result);
             }
@@ -304,7 +298,7 @@ namespace AspNetIdentityCustomDb.Controllers
         public ActionResult LinkLogin(string provider)
         {
             // Request a redirect to the external login provider to link a login for the current user
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
+            return new AccountController.ChallengeResult(provider, Url.Action(nameof(LinkLoginCallback), "Manage"), User.Identity.GetUserId());
         }
 
         //
